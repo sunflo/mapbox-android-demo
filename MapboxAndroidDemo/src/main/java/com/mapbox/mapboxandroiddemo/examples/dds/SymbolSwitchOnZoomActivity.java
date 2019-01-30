@@ -1,7 +1,7 @@
 package com.mapbox.mapboxandroiddemo.examples.dds;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -13,6 +13,7 @@ import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
@@ -31,7 +32,6 @@ public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnM
   private static final String BLUE_PERSON_ICON_ID = "blue-car-icon-marker-icon-id";
   private static final String BLUE_PIN_ICON_ID = "blue-marker-icon-marker-icon-id";
   private MapView mapView;
-  private MapboxMap mapboxMap;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -50,34 +50,34 @@ public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnM
   }
 
   @Override
-  public void onMapReady(MapboxMap mapboxMap) {
-    this.mapboxMap = mapboxMap;
-    initLayerIcons();
-    addDataToMap();
-    Toast.makeText(this, R.string.zoom_map_in_and_out_icon_switch_instruction,
-      Toast.LENGTH_SHORT).show();
+  public void onMapReady(final MapboxMap mapboxMap) {
+    mapboxMap.setStyle(Style.OUTDOORS, new Style.OnStyleLoaded() {
+      @Override
+      public void onStyleLoaded(@NonNull Style style) {
+        initLayerIcons(style);
+        addDataToMap(style);
+        Toast.makeText(SymbolSwitchOnZoomActivity.this,
+          R.string.zoom_map_in_and_out_icon_switch_instruction, Toast.LENGTH_SHORT).show();
+      }
+    });
   }
 
   /**
    * Add images to the map so that the SymbolLayers can reference the images.
    */
-  private void initLayerIcons() {
-    Bitmap bluePersonIcon = BitmapUtils.getBitmapFromDrawable(
-      getResources().getDrawable(R.drawable.ic_person));
-
-    Bitmap bluePinIcon = BitmapUtils.getBitmapFromDrawable(
-      getResources().getDrawable(R.drawable.blue_marker));
-
-    mapboxMap.addImage(BLUE_PERSON_ICON_ID, bluePersonIcon);
-    mapboxMap.addImage(BLUE_PIN_ICON_ID, bluePinIcon);
+  private void initLayerIcons(@NonNull Style loadedMapStyle) {
+    loadedMapStyle.addImage(BLUE_PERSON_ICON_ID, BitmapUtils.getBitmapFromDrawable(
+      getResources().getDrawable(R.drawable.ic_person)));
+    loadedMapStyle.addImage(BLUE_PIN_ICON_ID, BitmapUtils.getBitmapFromDrawable(
+      getResources().getDrawable(R.drawable.blue_marker)));
   }
 
   /**
    * Add the GeoJsonSource and SymbolLayers to the map.
    */
-  private void addDataToMap() {
+  private void addDataToMap(@NonNull Style loadedMapStyle) {
     // Add a new source from the GeoJSON data
-    mapboxMap.addSource(
+    loadedMapStyle.addSource(
       new GeoJsonSource("source-id",
         FeatureCollection.fromFeatures(new Feature[] {
           Feature.fromGeometry(Point.fromLngLat(
@@ -107,8 +107,8 @@ public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnM
         })
       )
     );
-    mapboxMap.addLayer(createLayer(BLUE_PERSON_ICON_ID, false));
-    mapboxMap.addLayer(createLayer(BLUE_PIN_ICON_ID, true));
+    loadedMapStyle.addLayer(createLayer(BLUE_PERSON_ICON_ID, false));
+    loadedMapStyle.addLayer(createLayer(BLUE_PIN_ICON_ID, true));
   }
 
   /**
