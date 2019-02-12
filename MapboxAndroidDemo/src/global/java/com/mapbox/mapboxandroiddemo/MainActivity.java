@@ -30,6 +30,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 import com.mapbox.mapboxandroiddemo.adapter.ExampleAdapter;
 import com.mapbox.mapboxandroiddemo.commons.AnalyticsTracker;
 import com.mapbox.mapboxandroiddemo.commons.FirstTimeRunChecker;
+import com.mapbox.mapboxandroiddemo.examples.dds.PolygonSelectToggleActivity;
 import com.mapbox.mapboxandroiddemo.examples.labs.AnimatedMarkerActivity;
 import com.mapbox.mapboxandroiddemo.examples.dds.DrawPolygonActivity;
 import com.mapbox.mapboxandroiddemo.examples.basics.MapboxMapOptionActivity;
@@ -1188,6 +1189,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       new Intent(MainActivity.this, SatelliteLandSelectActivity.class),
       null,
       R.string.activity_dds_satellite_land_select_url, true, BuildConfig.MIN_SDK_VERSION));
+
+    exampleItemModels.add(new ExampleItemModel(
+      R.id.nav_dds,
+      R.string.activity_dds_polygon_select_toggle_title,
+      R.string.activity_dds_polygon_select_toggle_description,
+      null,
+      new Intent(MainActivity.this, PolygonSelectToggleActivity.class),
+      R.string.activity_dds_polygon_select_toggle_url, false, BuildConfig.MIN_SDK_VERSION));
 
     exampleItemModels.add(new ExampleItemModel(
       R.id.nav_basics,

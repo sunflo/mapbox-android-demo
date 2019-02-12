@@ -308,4 +308,7 @@
     <string name="light_azimuth_angle">Light azimuthal angle</string>
     <string name="light_polar_angle">Light polar angle</string>
     <string name="building_opacity">Building opacity</string>
+
+    <!-- Polygon toggle -->
+    <string name="tap_on_neighborhood">Tap on a neighborhood area</string>
 </resources>
