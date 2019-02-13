@@ -308,4 +308,10 @@
     <string name="light_azimuth_angle">Light azimuthal angle</string>
     <string name="light_polar_angle">Light polar angle</string>
     <string name="building_opacity">Building opacity</string>
+
+    <!-- Finger drag to draw -->
+    <string name="draw_instruction">Draw your finger on the map to draw a line.</string>
+    <string name="map_unlocked">Move map if you\'d like.</string>
+    <string name="map_locked">Map is locked. Draw on it!</string>
+
 </resources>

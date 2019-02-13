@@ -75,6 +75,8 @@ import com.mapbox.mapboxandroiddemo.examples.javaservices.TilequeryActivity;
 import com.mapbox.mapboxandroiddemo.examples.labs.AnimatedImageGifActivity;
 import com.mapbox.mapboxandroiddemo.examples.labs.CalendarIntegrationActivity;
 import com.mapbox.mapboxandroiddemo.examples.labs.DashedLineDirectionsPickerActivity;
+import com.mapbox.mapboxandroiddemo.examples.labs.FingerDragDrawActivity;
+import com.mapbox.mapboxandroiddemo.examples.labs.FingerDrawJavaActivity;
 import com.mapbox.mapboxandroiddemo.examples.labs.IndoorMapActivity;
 import com.mapbox.mapboxandroiddemo.examples.labs.InsetMapActivity;
 import com.mapbox.mapboxandroiddemo.examples.labs.LocationPickerActivity;
@@ -1033,6 +1035,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       null,
       new Intent(MainActivity.this, MagicWindowKotlinActivity.class),
       R.string.activity_lab_magic_window_image_url, true, Build.VERSION_CODES.O));
+
+    exampleItemModels.add(new ExampleItemModel(
+      R.id.nav_lab,
+      R.string.activity_lab_drag_draw_title,
+      R.string.activity_lab_drag_draw_description,
+      new Intent(MainActivity.this, FingerDrawJavaActivity.class),
+      null,
+      R.string.activity_lab_drag_draw_url, true, BuildConfig.MIN_SDK_VERSION));
 
     exampleItemModels.add(new ExampleItemModel(
       R.id.nav_dds,

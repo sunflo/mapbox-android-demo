@@ -612,11 +612,18 @@
             android:label="@string/activity_dds_satellite_land_select_title">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.mapbox.mapboxandroiddemo.MainActivity" />
+                android:value="com.mapbox.mapboxandroiddemo.MainActivity" />Dr
         </activity>
         <activity
             android:name=".examples.dds.LineGradientActivity"
             android:label="@string/activity_dds_line_gradient_title">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mapbox.mapboxandroiddemo.MainActivity" />
+        </activity>
+        <activity
+            android:name=".examples.labs.FingerDrawJavaActivity"
+            android:label="@string/activity_lab_drag_draw_title">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mapbox.mapboxandroiddemo.MainActivity" />
