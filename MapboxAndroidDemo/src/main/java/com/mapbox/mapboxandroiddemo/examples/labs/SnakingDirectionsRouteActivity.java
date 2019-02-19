@@ -12,7 +12,6 @@ import com.mapbox.api.directions.v5.MapboxDirections;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.api.directions.v5.models.LegStep;
-import com.mapbox.api.directions.v5.models.StepIntersection;
 import com.mapbox.core.constants.Constants;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
@@ -49,27 +48,27 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.lineWidth;
 
 /**
- * Rather than showing the directions all at once, have it "snake" from the origin to destination
+ * Rather than showing the directions route all at once, have it "snake" from the origin to destination by showing the
+ * route a section at a time.
  */
-
 public class SnakingDirectionsRouteActivity extends AppCompatActivity
   implements OnMapReadyCallback {
 
   private static final float NAVIGATION_LINE_WIDTH = 6;
   private static final String DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID = "DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID";
   private static final String DRIVING_ROUTE_POLYLINE_SOURCE_ID = "DRIVING_ROUTE_POLYLINE_SOURCE_ID";
-  private static final String TAG = "SnakingRouteActivity";
+  private static final int DRAW_SPEED_MILLISECONDS = 500;
   private MapView mapView;
-  private MapboxMap map;
+  private MapboxMap mapboxMap;
   private MapboxDirections mapboxDirectionsClient;
   private Handler handler;
   private Runnable runnable;
 
   // Origin point in Paris, France
-  private static final Point origin = Point.fromLngLat(2.35222, 48.856614);
+  private static final Point parisOriginPoint = Point.fromLngLat(2.35222, 48.856614);
 
   // Destination point in Lyon, France
-  private static Point destination = Point.fromLngLat(4.83565, 45.76404);
+  private static Point lyonDestinationPoint = Point.fromLngLat(4.83565, 45.76404);
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -90,9 +89,9 @@ public class SnakingDirectionsRouteActivity extends AppCompatActivity
 
   @Override
   public void onMapReady(@NonNull final MapboxMap mapboxMap) {
-    this.map = mapboxMap;
+    this.mapboxMap = mapboxMap;
 
-    map.setStyle(Style.LIGHT, new Style.OnStyleLoaded() {
+    this.mapboxMap.setStyle(Style.LIGHT, new Style.OnStyleLoaded() {
       @Override
       public void onStyleLoaded(@NonNull Style style) {
 
@@ -100,9 +99,7 @@ public class SnakingDirectionsRouteActivity extends AppCompatActivity
 
         addMarkerIconsToMap(style);
 
-        // Get route from API
-        getDirectionsRoute(origin, destination);
-
+        getDirectionsRoute(parisOriginPoint, lyonDestinationPoint);
       }
     });
   }
@@ -113,8 +110,8 @@ public class SnakingDirectionsRouteActivity extends AppCompatActivity
 
     loadedMapStyle.addSource(new GeoJsonSource("source-id",
       FeatureCollection.fromFeatures(new Feature[] {
-        Feature.fromGeometry(Point.fromLngLat(origin.longitude(), origin.latitude())),
-        Feature.fromGeometry(Point.fromLngLat(destination.longitude(), destination.latitude())),
+        Feature.fromGeometry(Point.fromLngLat(parisOriginPoint.longitude(), parisOriginPoint.latitude())),
+        Feature.fromGeometry(Point.fromLngLat(lyonDestinationPoint.longitude(), lyonDestinationPoint.latitude())),
       })));
 
     loadedMapStyle.addLayer(new SymbolLayer("layer-id",
@@ -124,14 +121,13 @@ public class SnakingDirectionsRouteActivity extends AppCompatActivity
     ));
   }
 
-
   private void initDrivingRouteSourceAndLayer(@NonNull Style loadedMapStyle) {
     loadedMapStyle.addSource(new GeoJsonSource(DRIVING_ROUTE_POLYLINE_SOURCE_ID));
     loadedMapStyle.addLayer(new LineLayer(DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID,
       DRIVING_ROUTE_POLYLINE_SOURCE_ID)
       .withProperties(
         lineWidth(NAVIGATION_LINE_WIDTH),
-        lineOpacity(.3f),
+        lineOpacity(.8f),
         lineCap(LINE_CAP_ROUND),
         lineJoin(LINE_JOIN_ROUND),
         lineColor(Color.parseColor("#d742f4"))
@@ -159,13 +155,12 @@ public class SnakingDirectionsRouteActivity extends AppCompatActivity
     mapboxDirectionsClient.enqueueCall(new Callback<DirectionsResponse>() {
       @Override
       public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
-
         // Create log messages in case no response or routes are present
         if (response.body() == null) {
-          Timber.d("No routes found, make sure you set the right user and access token.");
+          Timber.d( "No routes found, make sure you set the right user and access token.");
           return;
         } else if (response.body().routes().size() < 1) {
-          Timber.d("No routes found");
+          Timber.d( "No routes found");
           return;
         }
 
@@ -173,13 +168,12 @@ public class SnakingDirectionsRouteActivity extends AppCompatActivity
         DirectionsRoute currentRoute = response.body().routes().get(0);
 
         // Start the step-by-step drawing of the route
-        runnable = new DrawRouteRunnable(map, currentRoute.legs().get(0).steps(), handler = new Handler());
-        handler.postDelayed(runnable, 1000);
+        runnable = new DrawRouteRunnable(mapboxMap, currentRoute.legs().get(0).steps(), handler = new Handler());
+        handler.postDelayed(runnable, DRAW_SPEED_MILLISECONDS);
       }
 
       @Override
       public void onFailure(Call<DirectionsResponse> call, Throwable throwable) {
-        Timber.d("Error: %s", throwable.getMessage());
         Toast.makeText(SnakingDirectionsRouteActivity.this,
           R.string.snaking_directions_activity_error, Toast.LENGTH_SHORT).show();
       }
@@ -204,74 +198,20 @@ public class SnakingDirectionsRouteActivity extends AppCompatActivity
 
     @Override
     public void run() {
-
-
       if (counterIndex < steps.size()) {
-
         LegStep singleStep = steps.get(counterIndex);
-
-        if (singleStep!=null && singleStep.geometry() != null) {
-          Log.d(TAG, "run: singleStep!=null && singleStep.geometry() != null");
-          LineString lineStringRepresentingSingleStep = LineString.fromPolyline(singleStep.geometry(), Constants.PRECISION_6);
-
+        if (singleStep != null && singleStep.geometry() != null) {
+          LineString lineStringRepresentingSingleStep = LineString.fromPolyline(
+            singleStep.geometry(), Constants.PRECISION_5);
           Feature featureLineString = Feature.fromGeometry(lineStringRepresentingSingleStep);
-          Log.d(TAG, "run: featureLineString at steps.get(counterIndex) = " + featureLineString);
-
           drivingRoutePolyLineFeatureList.add(featureLineString);
-          Log.d(TAG, "run: drivingRoutePolyLineFeatureList size = " + drivingRoutePolyLineFeatureList.size());
         }
-
-        GeoJsonSource source = mapboxMap.getStyle().getSourceAs(DRIVING_ROUTE_POLYLINE_SOURCE_ID);
-        if (source != null) {
-          source.setGeoJson(FeatureCollection.fromFeatures(drivingRoutePolyLineFeatureList));
-          Log.d(TAG, "run: source.setGeoJson(FeatureCollection.fromFeatures(drivingRoutePolyLineFeatureList));");
-        }
-        counterIndex++;
-        handler.postDelayed(this, 1000);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /*List<StepIntersection> intersections = singleStep.intersections();
-        for (int k = 0; k < intersections.size(); k++) {
-          Point location = intersections.get(k).location();
-          directionsPointsForLineLayer.add(Point.fromLngLat(location.longitude(), location.latitude()));
-          drivingRoutePolyLineFeatureList = new ArrayList<>();
-          LineString lineString = LineString.fromLngLats(directionsPointsForLineLayer);
-          List<Point> coordinates = lineString.coordinates();
-          for (int x = 0; x < coordinates.size(); x++) {
-            drivingRoutePolyLineFeatureList.add(Feature.fromGeometry(LineString.fromLngLats(coordinates)));
-          }
-
-          // Update the GeoJSON source
+        if (mapboxMap.getStyle() != null) {
           GeoJsonSource source = mapboxMap.getStyle().getSourceAs(DRIVING_ROUTE_POLYLINE_SOURCE_ID);
-          if (source != null) {
-            source.setGeoJson(FeatureCollection.fromFeatures(drivingRoutePolyLineFeatureList));
-          }
-        }
-
-        GeoJsonSource source = mapboxMap.getStyle().getSourceAs(DRIVING_ROUTE_POLYLINE_SOURCE_ID);
-        if (source != null) {
           source.setGeoJson(FeatureCollection.fromFeatures(drivingRoutePolyLineFeatureList));
         }
         counterIndex++;
-        Log.d(TAG, "counterIndex after ++ = " + counterIndex);
-        handler.postDelayed(this, 1000);*/
+        handler.postDelayed(this, DRAW_SPEED_MILLISECONDS);
       }
     }
   }
