@@ -30,6 +30,7 @@ import com.google.firebase.perf.metrics.AddTrace;
 import com.mapbox.mapboxandroiddemo.adapter.ExampleAdapter;
 import com.mapbox.mapboxandroiddemo.commons.AnalyticsTracker;
 import com.mapbox.mapboxandroiddemo.commons.FirstTimeRunChecker;
+import com.mapbox.mapboxandroiddemo.examples.styles.TextFieldFormattingActivity;
 import com.mapbox.mapboxandroiddemo.examples.labs.AnimatedMarkerActivity;
 import com.mapbox.mapboxandroiddemo.examples.dds.DrawPolygonActivity;
 import com.mapbox.mapboxandroiddemo.examples.basics.MapboxMapOptionActivity;
@@ -570,13 +571,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       null,
       R.string.activity_style_hillshade_url, false, BuildConfig.MIN_SDK_VERSION
     ));
-    exampleItemModels.add(new ExampleItemModel(
-      R.id.nav_styles,
-      R.string.activity_styles_fade_switch_title,
-      R.string.activity_styles_fade_switch_description,
-      new Intent(MainActivity.this, StyleFadeSwitchActivity.class),
-      null,
-      R.string.activity_styles_fade_switch_url, false, BuildConfig.MIN_SDK_VERSION));
 
     exampleItemModels.add(new ExampleItemModel(
       R.id.nav_styles,
@@ -593,6 +587,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       new Intent(MainActivity.this, ClickToAddImageActivity.class),
       null,
       R.string.activity_styles_click_to_add_image_url, false, BuildConfig.MIN_SDK_VERSION));
+
+    exampleItemModels.add(new ExampleItemModel(
+      R.id.nav_styles,
+      R.string.activity_styles_fade_switch_title,
+      R.string.activity_styles_fade_switch_description,
+      new Intent(MainActivity.this, StyleFadeSwitchActivity.class),
+      null,
+      R.string.activity_styles_fade_switch_url, false, BuildConfig.MIN_SDK_VERSION));
+
+
+    exampleItemModels.add(new ExampleItemModel(
+      R.id.nav_styles,
+      R.string.activity_styles_text_field_formatting_title,
+      R.string.activity_styles_text_field_formatting_description,
+      new Intent(MainActivity.this, TextFieldFormattingActivity.class),
+      null,
+      R.string.activity_styles_text_field_formatting_url, true, BuildConfig.MIN_SDK_VERSION));
 
     exampleItemModels.add(new ExampleItemModel(
       R.id.nav_extrusions,
