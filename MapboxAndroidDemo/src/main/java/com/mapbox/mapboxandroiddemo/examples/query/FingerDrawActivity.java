@@ -83,7 +83,7 @@ public class FingerDrawActivity extends AppCompatActivity {
   private final String searchDataSymbolLayerId = "searchDataSymbolLayerId";
   private final String touchPointMarkerId = "touchPointMarkerId";
   private final String searchDataMarkerId = "searchDataMarkerId";
-  private final float LINE_WIDTH = 5f;
+  private final float lineWidth = 5f;
 
   /**
    * Customize search UI with these booleans
@@ -99,7 +99,8 @@ public class FingerDrawActivity extends AppCompatActivity {
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
-      LatLng latLngTouchCoordinate = mapboxMap.getProjection().fromScreenLocation(new PointF(motionEvent.getX(), motionEvent.getY()));
+      LatLng latLngTouchCoordinate = mapboxMap.getProjection().fromScreenLocation(
+        new PointF(motionEvent.getX(), motionEvent.getY()));
 
       Point touchPoint = Point.fromLngLat(latLngTouchCoordinate.getLongitude(), latLngTouchCoordinate.getLatitude());
 
@@ -285,14 +286,14 @@ public class FingerDrawActivity extends AppCompatActivity {
       );
 
       style.addLayerBelow(new LineLayer(freehandDrawLineLayerId, freehandDrawLineLayerSourceId).withProperties(
-          lineWidth(LINE_WIDTH),
+          lineWidth(lineWidth),
           lineJoin(LINE_JOIN_ROUND),
           lineOpacity(1f),
           lineColor(Color.parseColor("#a0861c"))), markerSymbolLayerId
       );
 
       style.addLayer(new LineLayer(mapMatchedLineLayerId, mapMatchedLineLayerSourceId).withProperties(
-          lineWidth(LINE_WIDTH),
+          lineWidth(lineWidth),
           lineJoin(LINE_JOIN_ROUND),
           lineOpacity(1f),
           lineColor(Color.parseColor("#275ff9")))
