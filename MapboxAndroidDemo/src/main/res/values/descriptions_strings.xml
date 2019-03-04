@@ -69,6 +69,7 @@
     <string name="activity_query_redo_search_in_area_description">Search for certain features once the map is moved. This example finds parks.</string>
     <string name="activity_query_building_outline_description">Query the building layer and show a building\'s outline</string>
     <string name="activity_query_highlighted_line_description">Tap on a line and add a highlight effect behind it.</string>
+    <string name="activity_query_drag_draw_description">Drag a finger on the map to draw a search area.</string>
     <string name="activity_java_services_directions_description">Use Mapbox Java Services to request directions.</string>
     <string name="activity_java_services_optimization_description">Use Mapbox\'s Optimization API to retrieve and display the quickest multi-stop route.</string>
     <string name="activity_java_services_static_image_description">Use Mapbox Java Services to build a url and download a static map.</string>
@@ -107,8 +108,6 @@
     <string name="activity_lab_calendar_integration_description">Show calendar event locations on the map.</string>
     <string name="activity_lab_magic_window_description">Combine two maps for a magic window effect</string>
     <string name="activity_lab_fog_background_description">Add a gradient on top of a MapView to show a background fog effect.</string>
-    <string name="activity_lab_drag_draw_description">Drag a finger on the map to draw. Can also create boundaries/polygons.</string>
     <string name="activity_china_simple_china_mapview_description">Show an accurate and government-approved China map in your app using the Mapbox Maps SDK.</string>
-
 
 </resources>

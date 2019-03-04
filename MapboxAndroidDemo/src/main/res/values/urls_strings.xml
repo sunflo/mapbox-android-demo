@@ -68,6 +68,7 @@
     <string name="activity_query_redo_search_in_area_url" translatable="false">https://i.imgur.com/42QIsQI.png</string>
     <string name="activity_query_building_outline_url" translatable="false">https://i.imgur.com/eCc9e7o.png</string>
     <string name="activity_query_highlighted_line_url" translatable="false">https://i.imgur.com/ZrZCl7G.png</string>
+    <string name="activity_query_drag_draw_url" translatable="false">https://i.imgur.com/vf5uZyS.png</string>
     <string name="activity_java_services_directions_url" translatable="false">http://i.imgur.com/DhQltqB.jpg</string>
     <string name="activity_java_services_static_image_url" translatable="false">https://i.imgur.com/aHxPYRU.png</string>
     <string name="activity_java_services_optimization_url" translatable="false">http://i.imgur.com/guEQtlP.jpg</string>
@@ -107,7 +108,6 @@
     <string name="activity_lab_calendar_integration_url" translatable="false">https://i.imgur.com/M8TU7nH.png</string>
     <string name="activity_lab_magic_window_image_url">https://i.imgur.com/Nw78ZrV.png</string>
     <string name="activity_lab_fog_background_url">https://i.imgur.com/NcSGgD8.png</string>
-    <string name="activity_lab_drag_draw_url" translatable="false">https://i.imgur.com/vf5uZyS.png</string>
     <string name="activity_china_simple_china_mapview_url" translatable="false">https://i.imgur.com/KwoEynZ.png</string>
 
 </resources>

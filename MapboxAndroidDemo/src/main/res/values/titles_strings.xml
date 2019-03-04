@@ -68,6 +68,7 @@
     <string name="activity_query_click_on_layer_title">Click on single layer</string>
     <string name="activity_query_building_outline_title">Building outline</string>
     <string name="activity_query_highlighted_line_title">Highlighted line</string>
+    <string name="activity_query_drag_draw_title">Drawing search area</string>
     <string name="activity_java_services_directions_title">Show directions on map</string>
     <string name="activity_java_services_optimization_title">Show optimized directions on map</string>
     <string name="activity_java_services_static_image_title">Download a static map</string>
@@ -105,7 +106,6 @@
     <string name="activity_lab_calendar_integration_title">Calendar integration</string>
     <string name="activity_lab_magic_window_title">Magic Window</string>
     <string name="activity_lab_fog_background_title">Background fog</string>
-    <string name="activity_lab_drag_draw_title">Draw on the map</string>
     <string name="activity_china_simple_china_mapview_title">China map view</string>
 
 </resources>
