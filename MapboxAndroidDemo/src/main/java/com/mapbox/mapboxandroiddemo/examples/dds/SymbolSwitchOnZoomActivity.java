@@ -18,6 +18,10 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.mapboxsdk.utils.BitmapUtils;
 
+import static com.mapbox.mapboxsdk.style.expressions.Expression.literal;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.step;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.stop;
+import static com.mapbox.mapboxsdk.style.expressions.Expression.zoom;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
@@ -73,7 +77,7 @@ public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnM
   }
 
   /**
-   * Add the GeoJsonSource and SymbolLayers to the map.
+   * Add the GeoJsonSource and the SymbolLayer to the map.
    */
   private void addDataToMap(@NonNull Style loadedMapStyle) {
     // Add a new source from the GeoJSON data
@@ -107,29 +111,16 @@ public class SymbolSwitchOnZoomActivity extends AppCompatActivity implements OnM
         })
       )
     );
-    loadedMapStyle.addLayer(createLayer(BLUE_PERSON_ICON_ID, false));
-    loadedMapStyle.addLayer(createLayer(BLUE_PIN_ICON_ID, true));
-  }
 
-  /**
-   * This method creates a SymbolLayer which is ready to be added to the map.
-   *
-   * @param iconId The unique id of the image which the SymbolLayer should use for its symbol icon
-   * @param setMin Whether or not a minimum or maximum zoom level should be set on the SymbolLayer.
-   * @return a completed SymbolLayer which is ready to add to the map.
-   */
-  private SymbolLayer createLayer(String iconId, boolean setMin) {
-    SymbolLayer singleLayer = new SymbolLayer(iconId + "symbol-layer-id", "source-id");
+    //Create a SymbolLayer and use the {@link com.mapbox.mapboxsdk.style.expressions.Expression.step()}
+    // to adjust the SymbolLayer icon based on the zoom level.
+    SymbolLayer singleLayer = new SymbolLayer("symbol-layer-id", "source-id");
     singleLayer.setProperties(
-      iconImage(iconId),
+      iconImage(step(zoom(), literal(BLUE_PERSON_ICON_ID), stop(ZOOM_LEVEL_FOR_SWITCH, BLUE_PIN_ICON_ID))),
       iconIgnorePlacement(true),
       iconAllowOverlap(true));
-    if (setMin) {
-      singleLayer.setMinZoom(ZOOM_LEVEL_FOR_SWITCH);
-    } else {
-      singleLayer.setMaxZoom(ZOOM_LEVEL_FOR_SWITCH);
-    }
-    return singleLayer;
+
+    loadedMapStyle.addLayer(singleLayer);
   }
 
   @Override
