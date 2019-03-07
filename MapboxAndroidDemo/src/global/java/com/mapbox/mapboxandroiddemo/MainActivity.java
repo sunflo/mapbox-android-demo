@@ -585,7 +585,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
       R.string.activity_styles_text_field_multiple_formats_description,
       new Intent(MainActivity.this, TextFieldMultipleFormatsActivity.class),
       null,
-      R.string.activity_styles_fade_switch_url, false, BuildConfig.MIN_SDK_VERSION));
+      R.string.activity_styles_text_field_multiple_formats_url, false, BuildConfig.MIN_SDK_VERSION));
 
     exampleItemModels.add(new ExampleItemModel(
       R.id.nav_styles,
