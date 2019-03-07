@@ -10,11 +10,14 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.expressions.Expression;
+import com.mapbox.mapboxsdk.style.layers.Layer;
+
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.textField;
 
 public class TextFieldMultipleFormatsActivity extends AppCompatActivity {
 
   private MapView mapView;
-  private MapboxMap mapboxMap;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +35,36 @@ public class TextFieldMultipleFormatsActivity extends AppCompatActivity {
     mapView.getMapAsync(new OnMapReadyCallback() {
       @Override
       public void onMapReady(@NonNull MapboxMap mapboxMap) {
-        mapboxMap.setStyle(Style.LIGHT, new Style.OnStyleLoaded() {
+        mapboxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
           @Override
           public void onStyleLoaded(@NonNull final Style style) {
 
-            // Add label formatting here.
+            // Set up label formatting expression
+            Expression.FormatEntry bigLabel = Expression.formatEntry(
+              Expression.get("name_en"),
+              Expression.FormatOption.formatFontScale(1.5),
+              Expression.FormatOption.formatTextFont(new String[] {"Ubuntu Medium", "Arial Unicode MS Regular"})
+            );
 
+            Expression.FormatEntry newLine = Expression.formatEntry(
+              "\n",
+              Expression.FormatOption.formatFontScale(0.5)
+            );
+
+            Expression.FormatEntry smallLabel = Expression.formatEntry(
+              Expression.get("name"),
+              Expression.FormatOption.formatTextFont(new String[] {"Caveat Regular", "Arial Unicode MS Regular"})
+            );
+
+            Expression format = Expression.format(bigLabel, newLine, smallLabel);
+
+            // Retrieve the country label layers from the style and update them with the formatting expression
+            for (Layer mapLabelLayer : style.getLayers()) {
+              if (mapLabelLayer.getId().contains("country-label")) {
+                // apply formatting expression
+                mapLabelLayer.setProperties(textField(format));
+              }
+            }
           }
         });
       }
